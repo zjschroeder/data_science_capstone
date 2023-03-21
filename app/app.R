@@ -5,8 +5,11 @@ library(tidyverse)
 library(shinythemes)
 library(broom)
 library(sjPlot)
+# library(googleCloudStorageR)
 
 ##### Loading/Sourcing
+#data <- gcs_get_object("https://storage.cloud.google.com/cc_app/cc.RDS")
+
 data <- readRDS(here::here("data/cc.RDS"))
 
 source(here::here("scripts/meta_data.R"))
@@ -15,46 +18,47 @@ select_options <- useful_names[10:40]
 
 # Define UI
 ui <- dashboardPage(
-  dashboardHeader(title = "A Multi-faceted Investigation of Cancel Culture"),
+  dashboardHeader(title = "Investigating Cancel Culture",
+                  titleWidth = 350),
   dashboardSidebar(
     sidebarMenu(
       menuItem("Tweet Scraping", tabName = "tab1"),
       menuItem("Coding and Cleaning", tabName = "tab2"),
-      menuItem("Exploring Linguistic Features", tabName = "tab3"),
-      menuItem("Exploring Predictors of Tweet Engagement", tabName = "tab4"),
+      menuItem("Linguistic Features", tabName = "tab3"),
+      menuItem("Predictors of Engagement", tabName = "tab4"),
       menuItem("Menu Item 5", tabName = "tab5")
     )
   ),
   dashboardBody(
     tabItems(
       tabItem(tabName = "tab1",
-              uiOutput("scraping_tweets_md")),
+              fluidPage(
+              uiOutput("scraping_tweets_md"))
+              ),
       tabItem(tabName = "tab2",
-              uiOutput("coding_and_cleaning_md")),
+              fluidPage(uiOutput("coding_and_cleaning_md"))
+              ),
       tabItem(tabName = "tab3",
               fluidRow(
-                box(title = "Box 3",
                     selectInput("column_select", "Please select a tweet feature", 
-                                choices = select_options)),
-                box(title = "Example Tweet",
-                    tableOutput("max_table"))
-              )),
+                                choices = select_options)
+                ),
+                fluidRow(title = "Example Tweet",
+                    tableOutput("max_table")
+                )
+              ),
       tabItem(tabName = "tab4",
         fluidRow(
           conditionalPanel(
             condition = "length($('select[multiple]').val()) > 0",
-            box(
               selectInput("var_select", "Select predictors", 
                           choices = select_options,
                           multiple = TRUE),
               actionButton("run_model", "Run")
-            )
           )
         ),
         fluidRow(
-          box(
           uiOutput("lm_output")
-          )
         )
       )
       # tabItem(tabName = "tab5",
@@ -91,7 +95,7 @@ server <- function(input, output) {
       filter(!is.na(!!sym(input$column_select))) %>%
       # group_by(Influencer) %>%
       top_n(n = floor(0.01 * n()), wt = !!sym(input$column_select)) %>%
-      slice_max(nchar(text)) %>% 
+      slice_max(nchar(text), n = 5) %>% 
       select(text)
   })
   

@@ -3,7 +3,7 @@
     "path": "~/Desktop/data_science_capstone/scripts/scraping_twitter_data.Rmd",
     "project_path": "scripts/scraping_twitter_data.Rmd",
     "type": "r_markdown",
-    "hash": "1288932606",
+    "hash": "1355156995",
     "contents": "",
     "dirty": false,
     "created": 1679364041202.0,
@@ -13,15 +13,15 @@
         "chunk_output_type": "console",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "3,6",
-        "scrollLine": "1"
+        "cursorPosition": "1,28",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1679364055,
+    "lastKnownWriteTime": 1679365650,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1679364055957,
+    "last_content_update": 1679365650204,
     "read_only": false,
     "read_only_alternatives": []
 }

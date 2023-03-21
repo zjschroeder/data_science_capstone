@@ -1,12 +1,5 @@
 ---
 title: Coding and Cleaning Tweet Text with LIWC-22
-author: Zach Schroeder
-date: '2023-03-02'
-slug: []
-categories: []
-tags: []
-featured_image: 'images/liwc22.jpg'
-description: ''
 editor_options: 
   chunk_output_type: console
 # runtime: shiny

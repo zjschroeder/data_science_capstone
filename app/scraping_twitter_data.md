@@ -1,12 +1,5 @@
 ---
 title: Scraping Twitter Data
-author: 
-date: 
-slug: []
-categories: []
-tags: []
-featured_image: 'images/twitter_mining.png'
-description: ''
 editor_options: 
   chunk_output_type: console
 ---
