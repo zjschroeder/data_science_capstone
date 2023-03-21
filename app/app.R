@@ -21,7 +21,7 @@ ui <- dashboardPage(
       menuItem("Tweet Scraping", tabName = "tab1"),
       menuItem("Coding and Cleaning", tabName = "tab2"),
       menuItem("Exploring Linguistic Features", tabName = "tab3"),
-      menuItem("Menu Item 4", tabName = "tab4"),
+      menuItem("Exploring Predictors of Tweet Engagement", tabName = "tab4"),
       menuItem("Menu Item 5", tabName = "tab5")
     )
   ),
@@ -29,8 +29,8 @@ ui <- dashboardPage(
     tabItems(
       tabItem(tabName = "tab1",
               uiOutput("scraping_tweets_md")),
-      # tabItem(tabName = "tab2",
-      #         uiOutput("coding_and_cleaning_md")),
+      tabItem(tabName = "tab2",
+              uiOutput("coding_and_cleaning_md")),
       tabItem(tabName = "tab3",
               fluidRow(
                 box(title = "Box 3",

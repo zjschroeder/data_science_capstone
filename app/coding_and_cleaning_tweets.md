@@ -1,0 +1,63 @@
+---
+title: Coding and Cleaning Tweet Text with LIWC-22
+author: Zach Schroeder
+date: '2023-03-02'
+slug: []
+categories: []
+tags: []
+featured_image: 'images/liwc22.jpg'
+description: ''
+editor_options: 
+  chunk_output_type: console
+# runtime: shiny
+output: html_document
+---
+
+
+
+For this app, I used the following packages:
+
+
+```r
+# For loading and combining multiple files
+library(vroom)
+files <- paste0("static/data/LIWC_cc", 1:3, ".csv")
+data <- vroom(files)
+```
+
+In this post, I'll walk us through our process for cleaning these tweets. The data we're using here are every mention of the words *cancel culture* in a tweet from the beginning of Twitter (2007). When preparing the API call, we removed all retweets and searched for only posts in English. This has given us 40 posts.
+
+We initially ran our data through the LIWC-22 software. You can read more about LIWC [here](https://www.liwc.app/).
+
+This gave us numeric scores for over 100 different linguistic components ranging from analytic thinking to the rate of I/Me pronouns. From these, we've narrowed down to a smaller list of 32 theoretically-related aspects.
+
+
+```r
+data <- janitor::clean_names(data) %>% 
+  select(
+    tweet_id, text, user_verified, retweet_count, like_count, quote_count, user_followers_count, user_following_count, 
+
+wc, analytic, clout, authentic,  big_words,
+they, ipron, number, affiliation, achieve, power, cognition, allnone, cogproc, insight, 
+cause, discrep, tentat, certitude, tone_pos,
+tone_neg, emo_anx, emo_anger, emo_sad,
+swear, socbehav, prosocial, polite, conflict,
+moral, politic, curiosity)
+names(data) = useful_names[1:40]
+```
+
+We next ensure that our data are actually in English. The Twitter API's language filter options are very imperfect.
+
+
+```r
+data <- data %>% 
+  filter(cld3::detect_language(text) == "en")
+```
+
+Finally, we save our data in a .RDS file to ease in manipulating it over the next several apps.
+
+
+```r
+saveRDS(data, here::here("static/data/cc.RDS"))
+```
+

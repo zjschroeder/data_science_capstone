@@ -1,7 +1,7 @@
 ---
 title: Scraping Twitter Data
-author: Zach Schroeder
-date: '2023-03-01'
+author: 
+date: 
 slug: []
 categories: []
 tags: []
