@@ -7,14 +7,17 @@ library(broom)
 library(sjPlot)
 library(plotly)
 library(lubridate)
-library(rdrop2)
+source(here::here("scripts/meta_data.R"))
 
-data <- drop_read_csv("Apps/Cancel Culture Access/cc.csv")
+files <- c(here::here("data_1.RDS"), here::here("data_2.RDS"))
+
+data  <- files %>%
+  map_dfr(readRDS)
 
 data <- data[,-1]
 names(data) <- c(useful_names[1:40], "Date")
-
-source(here::here("scripts/meta_data.R"))
+dates <- readRDS(here::here("cc_mentions_dates.RDS")) %>% tibble()
+names(dates) = "date"
 
 select_options <- useful_names[10:40]
 
@@ -26,9 +29,9 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("Overview", tabName = "home"),
       menuItem("Data Collection", tabName = "tab1"),
+      menuItem("Timelines", tabName = "tab5"),
       menuItem("Linguistic Features", tabName = "tab3"),
-      menuItem("Predictors of Engagement", tabName = "tab4"),
-      menuItem("Timelines", tabName = "tab5")
+      menuItem("Predictors of Engagement", tabName = "tab4")
     )
   ),
   dashboardBody(
@@ -61,22 +64,24 @@ ui <- dashboardPage(
                       condition = "length($('select[multiple]').val()) > 0",
                       selectInput("var_select", "Select predictors", 
                                   choices = select_options,
-                                  multiple = TRUE),
-                      actionButton("run_model", "Run")
+                                  multiple = TRUE)
                     )
                 )),
                 fluidRow(box(width = 12,
                     plotOutput("plot_output"))
               ),
               fluidRow(box(width = 12,
-                           textOutput("summary_output"))
+                           verbatimTextOutput("summary_output"))
                 
               )
       ),
       tabItem(tabName = "tab5",
+              fluidRow(box(width = 12,
+                plotlyOutput(outputId = "timeline_plot"))
+              ),
               fluidRow(
-                plotlyOutput(outputId = "timeline_plot")
-              )
+                box(width = 12, 
+                    textOutput("timeline_discussion")))
       )
     )
   )
@@ -109,7 +114,7 @@ server <- function(input, output) {
   model <- reactive({
     if(length(input$var_select) > 0) {
       df <- data %>% 
-        select(input$var_select, Retweets)
+        select(Retweets, input$var_select)
       # fit the linear model
       lm(Retweets ~ ., data = df)
     }
@@ -130,19 +135,20 @@ server <- function(input, output) {
   })
   
   # PAGE 5 Render timeline output
-  df <- data %>% 
-    select(Date) %>% 
+  dates <- dates %>% 
     mutate(
-      week_date = round_date(ymd_hms(data$Date), unit = "week")
+      week_date = round_date(ymd_hms(dates$date), unit = "week")
     )
   
-  timeline_fig <- plot_ly(x = df$week_date,
+  timeline_fig <- plot_ly(x = dates$week_date,
                           type = "histogram")
   
   output$timeline_plot <- renderPlotly({
     timeline_fig
   })
-  
+  output$timeline_discussion <- renderText({
+    "Cancel Culture is a very recent phenomenon. As is seen above, discourse in earnest began in late 2019. The large spike in tweets discussing cancel culture in July 2020 is in response to an open letter published in Harper's Magazine titled, A Letter on Justice and Open Debate. Using your cursor, feel free to explore peaks and valleys in the discourse around cancel culture."
+  })
 }
 
 # Run the app

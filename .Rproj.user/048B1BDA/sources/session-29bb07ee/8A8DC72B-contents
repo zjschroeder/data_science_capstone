@@ -1,0 +1,11 @@
+urls <- paste0("Data/cc_", 1:8, ".csv")
+dates <- list()
+for(i in seq_along(urls)){
+  dates[[i]] <- data.table::fread(urls[i],
+                    select = c("created_at"))
+}
+d <- c(dates[[1]][["created_at"]], dates[[2]][["created_at"]], dates[[3]][["created_at"]], 
+       dates[[4]][["created_at"]], dates[[5]][["created_at"]], dates[[6]][["created_at"]], 
+       dates[[7]][["created_at"]], dates[[8]][["created_at"]])
+dates <- d
+saveRDS(dates, "cc_mentions_dates.RDS")
