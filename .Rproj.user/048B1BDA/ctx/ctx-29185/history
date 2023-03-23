@@ -1,0 +1,512 @@
+# # Add the crossprod_chunk to covmat within the parallel loop
+# crossprod_chunk
+skip_rows
+}
+View(covmat)
+comb <- function(a, b){a + b}
+# Run the iterations in parallel
+cov_list <- foreach(i = 1:3, # ceiling(num_rows/rows),
+.packages = c("stats"),
+.combine = 'comb') %dopar% {
+skip_rows <- (i-1) * rows
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1,
+#                        header = TRUE)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# # Add the crossprod_chunk to covmat within the parallel loop
+# crossprod_chunk
+skip_rows
+}
+# Run the iterations in parallel
+cov_list <- foreach(i = 1:3, # ceiling(num_rows/rows),
+.packages = c("stats"),
+.combine = 'comb') %dopar% {
+skip_rows <- (i-1) * rows
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1,
+#                        header = TRUE)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# # Add the crossprod_chunk to covmat within the parallel loop
+# crossprod_chunk
+skip_rows
+}
+# Run the iterations in parallel
+cov_list <- foreach(i = 1:3, # ceiling(num_rows/rows),
+.packages = c("stats"),
+.combine = 'comb') %dopar% {
+# skip_rows <- (i-1) * rows
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1,
+#                        header = TRUE)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# # Add the crossprod_chunk to covmat within the parallel loop
+# crossprod_chunk
+return(i)
+}
+comb(1, 2)
+n <- 10 # number of iterations
+results <- foreach(i = 1:n, .combine = rbind) %dopar% {
+if (i == 1) {
+# create the first matrix
+matrix(runif(16), nrow = 4, ncol = 4)
+} else {
+# create a new matrix and add it to the prior loop's matrix
+matrix(runif(16), nrow = 4, ncol = 4) + results[(i-1)*4 + 1:i*4, ]
+}
+}
+results <- foreach(i = 1:n, .combine = rbind) %dopar% {
+if (i == 1) {
+# create the first matrix
+matrix(runif(16), nrow = 4, ncol = 4)
+} else {
+# create a new matrix and add it to the prior loop's matrix
+matrix(runif(16), nrow = 4, ncol = 4) + results[(i-1)*4 + 1:i*4, ]
+}
+}
+load("num_rows.Rdata")
+nvar = 4299
+url <- "Data/2022-12-07_MEH_DTM_Binary.csv"
+rows <- 10
+# Set the number of cores to use
+num_cores <- detectCores() - 1
+# Set counters and empty matrix for covmat
+iter <- 0
+covmat <- matrix(0, nrow = nvar, ncol = nvar)
+# Set up parallel processing
+cl <- makeCluster(num_cores)
+registerDoParallel(cl)
+results <- foreach(i = 1:n, .combine = rbind) %dopar% {
+if (i == 1) {
+# create the first matrix
+matrix(runif(16), nrow = 4, ncol = 4)
+} else {
+# create a new matrix and add it to the prior loop's matrix
+matrix(runif(16), nrow = 4, ncol = 4) + results[(i-1)*4 + 1:i*4, ]
+}
+}
+library(snow)
+install.packages("snow")
+library(snow)
+library(stats)
+load("num_rows.Rdata")
+nvar = 4299
+url <- "Data/2022-12-07_MEH_DTM_Binary.csv"
+rows <- 10
+# Set the number of cores to use
+num_cores <- detectCores() - 1
+# Set counters and empty matrix for covmat
+iter <- 0
+covmat <- matrix(0, nrow = nvar, ncol = nvar)
+# Set up parallel processing
+cl <- makeCluster(num_cores, type = "SOCK")
+clusterEvalQ(cl, {
+library(stats)
+})
+clusterExport(cl, c("url", "rows", "nvar"))
+# Define a function to calculate crossprod_chunk
+calc_crossprod <- function(skip_rows) {
+data_chunk <- read.csv(url, nrows = rows, skip = skip_rows + 1, header = TRUE)[,-c(1:4)]
+crossprod_chunk <- crossprod(scale(data_chunk, center = means_column, scale = FALSE))
+return(crossprod_chunk)
+}
+# Run the iterations in parallel
+cov_list <- clusterApplyLB(cl, 1:3, calc_crossprod)
+clusterExport(cl, c("url", "rows", "nvar", "means_column"))
+# Define a function to calculate crossprod_chunk
+calc_crossprod <- function(skip_rows) {
+data_chunk <- read.csv(url, nrows = rows, skip = skip_rows + 1, header = TRUE)[,-c(1:4)]
+crossprod_chunk <- crossprod(scale(data_chunk, center = means_column, scale = FALSE))
+return(crossprod_chunk)
+}
+# Run the iterations in parallel
+cov_list <- clusterApplyLB(cl, 1:3, calc_crossprod)
+View(cov_list)
+ceiling(num_rows/7)
+55872487
+558724*7
+rows <- vector(1:8)
+rows <- c(1:8)
+rows <- rows*ceiling(num_rows/rows)
+ceiling(num_rows/rows)
+sections <- c(1:8)
+rows <- 1000
+rows <- rows*ceiling(num_rows/rows)
+load("num_rows.Rdata")
+nvar = 4299
+url <- "Data/2022-12-07_MEH_DTM_Binary.csv"
+rows <- 1000
+# Set the number of cores to use
+num_cores <- detectCores() - 1
+# Set counters and empty matrix for covmat
+iter <- 0
+covmat <- matrix(0, nrow = nvar, ncol = nvar)
+sections <- c(1:8)
+sections <- sections*ceiling(num_rows/rows)
+ceiling(num_rows/rows)
+ceiling(num_rows/sections)
+sections <- c(1:8)
+sections <- sections*ceiling(num_rows/num_cores)
+tail(sections)
+sections <- c(1:num_cores)
+sections <- sections*ceiling(num_rows/num_cores)
+tail(sections)
+ceiling(num_rows/num_cores)
+ceiling(num_rows/num_cores)/rows
+ceiling(ceiling(num_rows/num_cores)/rows)
+n_iter_per_core <- ceiling(ceiling(num_rows/num_cores)/rows)
+ceiling(num_rows/num_cores)
+section_size <- ceiling(num_rows/num_cores)
+n_iter_per_core <- ceiling(section_size/rows)
+load("num_rows.Rdata")
+nvar = 4299
+url <- "Data/2022-12-07_MEH_DTM_Binary.csv"
+rows <- 1000
+# Set the number of cores to use
+num_cores <- detectCores() - 1
+# Set counters and empty matrix for covmat
+iter <- 0
+covmat <- matrix(0, nrow = nvar, ncol = nvar)
+section_size <- ceiling(num_rows/num_cores)
+n_iter_per_core <- ceiling(section_size/rows)
+tail(sections)
+# Set up parallel processing
+cl <- makeCluster(num_cores)
+registerDoParallel(cl)
+# Run the iterations in parallel
+cov_list <- foreach(i = num_cores,
+.packages = c("stats")) %dopar% {
+for(j in 1:n_iter_per_core){
+skip_rows <- (i-1) * section_size
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+print(skip_rows)
+}
+return(covmat)
+}
+View(cov_list)
+# Run the iterations in parallel
+foreach(i = num_cores,
+.packages = c("stats")) %dopar% {
+for(j in 1:n_iter_per_core){
+skip_rows <- (i-1) * section_size
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+print(skip_rows)
+}
+return(covmat)
+}
+?foreach
+# Run the iterations in parallel
+foreach(i = 1:num_cores,
+.packages = c("stats")) %dopar% {
+for(j in 1:n_iter_per_core){
+skip_rows <- (i-1) * section_size
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+print(skip_rows)
+}
+return(covmat)
+}
+# Run the iterations in parallel
+foreach(i = 1:num_cores,
+.packages = c("stats")) %dopar% {
+for(j in 1:n_iter_per_core){
+skip_rows <- (i-1) * section_size
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+print(skip_rows)
+}
+#return(covmat)
+}
+# Run the iterations in parallel
+foreach(i = 1:num_cores,
+.packages = c("stats")) %dopar% {
+for(j in 1:n_iter_per_core){
+skip_rows <- (i-1) * section_size
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+return(skip_rows)
+}
+#return(covmat)
+}
+extra_list <- list()
+# Run the iterations in parallel
+x <- foreach(i = 1:num_cores,
+.packages = c("stats")) %dopar% {
+for(j in 1:n_iter_per_core){
+skip_rows <- ((i-1) * section_size)
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+extra_list[i,j] = skip_rows
+}
+return(extra_list)
+}
+extra_list <- matrix(nrow = num_cores, ncol = n_iter_per_core)
+# Run the iterations in parallel
+foreach(i = 1:num_cores,
+.packages = c("stats")) %dopar% {
+for(j in 1:n_iter_per_core){
+skip_rows <- ((i-1) * section_size)
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+extra_list[i,j] = skip_rows
+}
+}
+# Run the iterations in parallel
+foreach(num_cores,
+.packages = c("stats")) %dopar% {
+for(j in 1:n_iter_per_core){
+skip_rows <- ((i-1) * section_size)
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+extra_list[i,j] = skip_rows
+}
+}
+# Run the iterations in parallel
+x <- foreach(i = 1:num_cores,
+.packages = c("stats")) %dopar% {
+for(j in 1:n_iter_per_core){
+skip_rows <- ((i-1) * section_size)
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+extra_list[i,j] = skip_rows
+}
+}
+View(x)
+# Run the iterations in parallel
+x <- foreach(i = 1:num_cores,
+.packages = c("stats")) %dopar% {
+x[i] = i
+# for(j in 1:n_iter_per_core){
+#   skip_rows <- ((i-1) * section_size)
+#   # data_chunk <- read.csv(url,
+#   #                        nrows = rows,
+#   #                        skip = skip_rows + 1)[,-c(1:4)]
+#   # crossprod_chunk <- crossprod(scale(data_chunk,
+#   #                                    center = means_column,
+#   #                                    scale = FALSE))
+#   # covmat <- covmat + crossprod_chunk
+#   extra_list[i,j] = skip_rows
+#}
+}
+View(x)
+# Run the iterations in parallel
+x <- foreach(i = 1:num_cores,
+.packages = c("stats"),
+.combine = "c") %dopar% {
+for(j in 1:n_iter_per_core){
+skip_rows <- ((i-1) * section_size)
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+# extra_list[i,j] = skip_rows
+return(skip_rows)
+}
+}
+# Run the iterations in parallel
+x <- foreach(i = 1:num_cores,
+.packages = c("stats"),
+.combine = "c") %dopar% {
+x <- vector(length = n_iter_per_core)
+for(j in 1:n_iter_per_core){
+skip_rows <- ((i-1) * section_size)
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+# extra_list[i,j] = skip_rows
+x[j] <- skip_rows
+}
+}
+# Run the iterations in parallel
+x <- foreach(i = 1:num_cores,
+.packages = c("stats"),
+.combine = "c") %dopar% {
+interim <- vector(length = n_iter_per_core)
+for(j in 1:n_iter_per_core){
+start <- ((i-1) * section_size)
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+# extra_list[i,j] = skip_rows
+interim[j] <- skip_rows
+}
+}
+# Run the iterations in parallel
+x <- foreach(i = 1:num_cores,
+.packages = c("stats"),
+.combine = "c") %dopar% {
+interim <- vector(length = n_iter_per_core)
+for(j in 1:n_iter_per_core){
+start <- ((i-1) * section_size)
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+# extra_list[i,j] = skip_rows
+interim[j] <- start
+}
+}
+# Run the iterations in parallel
+foreach(i = 1:num_cores,
+.packages = c("stats")) %dopar% {
+for(j in 1:n_iter_per_core){
+start <- ((i-1) * section_size)
+skip <- start*j*rows
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+# extra_list[i,j] = skip_rows
+return(skip)
+}
+}
+# Run the iterations in parallel
+foreach(i = 1:num_cores,
+.packages = c("stats")) %dopar% {
+for(j in 1:n_iter_per_core){
+start <- ((i-1) * section_size)
+skip <- start + j*rows
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+# extra_list[i,j] = skip_rows
+return(skip)
+}
+}
+# Run the iterations in parallel
+foreach(i = 1:num_cores,
+.packages = c("stats"),
+.combine = "c") %dopar% {
+for(j in 1:n_iter_per_core){
+start <- ((i-1) * section_size)
+# skip <- start + j*rows
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+# extra_list[i,j] = skip_rows
+return(start+j)
+}
+}
+comb <- function(d1, d2){d1 + d2}
+# Run the iterations in parallel
+foreach(i = 1:num_cores,
+.packages = c("stats"),
+.combine = "c") %:%
+foreach(j = 1:n_iter_per_core,
+.combine = "comb") %dopar%{
+start <- ((i-1) * section_size)
+# skip <- start + j*rows
+# data_chunk <- read.csv(url,
+#                        nrows = rows,
+#                        skip = skip_rows + 1)[,-c(1:4)]
+# crossprod_chunk <- crossprod(scale(data_chunk,
+#                                    center = means_column,
+#                                    scale = FALSE))
+# covmat <- covmat + crossprod_chunk
+# extra_list[i,j] = skip_rows
+return(start+j)
+}
+# Run the iterations in parallel
+x <- foreach(i = 1:num_cores,
+.packages = c("stats"),
+.combine = "c") %:%
+foreach(j = 1:3,# n_iter_per_core,
+.combine = "comb",
+.inorder = TRUE) %dopar%{
+start <- ((i-1) * section_size)
+skip <- start + j*rows
+data_chunk <- read.csv(url,
+nrows = rows,
+skip = skip + 1)[,-c(1:4)]
+crossprod_chunk <- crossprod(scale(data_chunk,
+center = means_column,
+scale = FALSE))
+covmat <- covmat + crossprod_chunk
+return(covmat)
+}
+head(covmat)
+rm(list = ls())
+rdrop2::drop_auth()
+Sys.getenv()
+drop_auth()
+usethis::edit_r_environ()

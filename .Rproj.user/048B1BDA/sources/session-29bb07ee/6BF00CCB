@@ -3,7 +3,7 @@
     "path": "~/Desktop/data_science_capstone/app/app.R",
     "project_path": "app/app.R",
     "type": "r_source",
-    "hash": "3353357760",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1679361263307.0,
@@ -12,15 +12,16 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "23,16",
-        "scrollLine": "7"
+        "cursorPosition": "5,14",
+        "scrollLine": "0",
+        "docOutlineVisible": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1679366609,
+    "lastKnownWriteTime": 1679523364,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1679366609673,
+    "last_content_update": 1679523364348,
     "read_only": false,
     "read_only_alternatives": []
 }

@@ -5,12 +5,14 @@ library(tidyverse)
 library(shinythemes)
 library(broom)
 library(sjPlot)
-# library(googleCloudStorageR)
+library(plotly)
+library(lubridate)
+library(rdrop2)
 
-##### Loading/Sourcing
-#data <- gcs_get_object("https://storage.cloud.google.com/cc_app/cc.RDS")
+data <- drop_read_csv("Apps/Cancel Culture Access/cc.csv")
 
-data <- readRDS(here::here("data/cc.RDS"))
+data <- data[,-1]
+names(data) <- c(useful_names[1:40], "Date")
 
 source(here::here("scripts/meta_data.R"))
 
@@ -22,47 +24,57 @@ ui <- dashboardPage(
                   titleWidth = 350),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Tweet Scraping", tabName = "tab1"),
-      menuItem("Coding and Cleaning", tabName = "tab2"),
+      menuItem("Data Collection", tabName = "tab1"),
       menuItem("Linguistic Features", tabName = "tab3"),
       menuItem("Predictors of Engagement", tabName = "tab4"),
-      menuItem("Menu Item 5", tabName = "tab5")
+      menuItem("Timelines", tabName = "tab5")
     )
   ),
   dashboardBody(
     tabItems(
       tabItem(tabName = "tab1",
-              fluidPage(
-              uiOutput("scraping_tweets_md"))
-              ),
-      tabItem(tabName = "tab2",
-              fluidPage(uiOutput("coding_and_cleaning_md"))
-              ),
+              fluidRow(htmlOutput("data_collection")
+
+              )
+      ),
       tabItem(tabName = "tab3",
               fluidRow(
-                    selectInput("column_select", "Please select a tweet feature", 
+                box(width = 12,
+                    selectInput("column_select", 
+                                "Please select a tweet feature", 
                                 choices = select_options)
-                ),
-                fluidRow(title = "Example Tweet",
-                    tableOutput("max_table")
                 )
               ),
+              fluidRow(
+                box(width = 12,
+                    title = "Example Tweet",
+                    tableOutput("max_table")
+                )
+              )
+      ),
       tabItem(tabName = "tab4",
-        fluidRow(
-          conditionalPanel(
-            condition = "length($('select[multiple]').val()) > 0",
-              selectInput("var_select", "Select predictors", 
-                          choices = select_options,
-                          multiple = TRUE),
-              actionButton("run_model", "Run")
-          )
-        ),
-        fluidRow(
-          uiOutput("lm_output")
-        )
+              fluidRow(
+                box(width = 12,
+                    conditionalPanel(
+                      condition = "length($('select[multiple]').val()) > 0",
+                      selectInput("var_select", "Select predictors", 
+                                  choices = select_options,
+                                  multiple = TRUE),
+                      actionButton("run_model", "Run")
+                    )
+                )
+              ),
+              fluidRow(
+                box(width = 12,
+                    uiOutput("lm_output")
+                )
+              )
+      ),
+      tabItem(tabName = "tab5",
+              fluidRow(
+                plotlyOutput(outputId = "timeline_plot")
+              )
       )
-      # tabItem(tabName = "tab5",
-      #         uiOutput("scraping_tweets_md")),
     )
   )
 )
@@ -70,26 +82,9 @@ ui <- dashboardPage(
 
 # Define server
 server <- function(input, output) {
-  output$plot1 <- renderPlot({
-    # plot data here
-  })
-  output$table1 <- renderTable({
-    # create table here
-  })
-  output$plot2 <- renderPlot({
-    # plot data based on input$select1 here
-  })
-  output$scraping_tweets_md <- renderUI({
-    HTML(markdown::markdownToHTML(
-      knitr::knit(here::here("scripts/scraping_twitter_data.Rmd"))
-    ))
-  })
-  output$coding_and_cleaning_md <- renderUI({
-    HTML(markdown::markdownToHTML(
-      knitr::knit(here::here("scripts/coding_and_cleaning_tweets.Rmd"))
-    ))
-  })
-  # Reactive function to generate maximum value and corresponding text for each influencer
+  output$data_collection <- renderUI({includeHTML(here::here("scraping_twitter_data.html"))
+    })
+  
   max_vals <- reactive({
     data %>%
       filter(!is.na(!!sym(input$column_select))) %>%
@@ -130,7 +125,6 @@ server <- function(input, output) {
       h3("Model Plot"),
       plotOutput("plot_output")
     )
-    
   })
   
   # Render model summary as text
@@ -142,6 +136,30 @@ server <- function(input, output) {
   output$plot_output <- renderPlot({
     lm_output()$plot
   })
+  
+  # PAGE 5
+  
+  timeline <- eventReactive(input$run_timeline, {
+    
+    
+    fig <- plot_ly(x = df$week_date,
+                   type = "histogram")
+  })
+  
+  # Render timeline output
+  df <- data %>% 
+    select(Date) %>% 
+    mutate(
+      week_date = round_date(ymd_hms(data$Date), unit = "week")
+    )
+  
+  timeline_fig <- plot_ly(x = df$week_date,
+                          type = "histogram")
+  
+  output$timeline_plot <- renderPlotly({
+    timeline_fig
+  })
+  
 }
 
 # Run the app
