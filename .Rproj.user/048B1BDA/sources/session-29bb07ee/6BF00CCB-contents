@@ -24,6 +24,7 @@ ui <- dashboardPage(
                   titleWidth = 350),
   dashboardSidebar(
     sidebarMenu(
+      menuItem("Overview", tabName = "home"),
       menuItem("Data Collection", tabName = "tab1"),
       menuItem("Linguistic Features", tabName = "tab3"),
       menuItem("Predictors of Engagement", tabName = "tab4"),
@@ -32,10 +33,11 @@ ui <- dashboardPage(
   ),
   dashboardBody(
     tabItems(
+      tabItem(tabName = "home",
+              fluidPage(htmlOutput("overview"))
+              ),
       tabItem(tabName = "tab1",
-              fluidRow(htmlOutput("data_collection")
-
-              )
+              fluidPage(htmlOutput("data_collection"))
       ),
       tabItem(tabName = "tab3",
               fluidRow(
@@ -62,12 +64,13 @@ ui <- dashboardPage(
                                   multiple = TRUE),
                       actionButton("run_model", "Run")
                     )
-                )
+                )),
+                fluidRow(box(width = 12,
+                    plotOutput("plot_output"))
               ),
-              fluidRow(
-                box(width = 12,
-                    uiOutput("lm_output")
-                )
+              fluidRow(box(width = 12,
+                           textOutput("summary_output"))
+                
               )
       ),
       tabItem(tabName = "tab5",
@@ -85,6 +88,9 @@ server <- function(input, output) {
   output$data_collection <- renderUI({includeHTML(here::here("scraping_twitter_data.html"))
     })
   
+  output$overview <- renderUI({includeHTML(here::here("overview.html"))
+  })
+  
   max_vals <- reactive({
     data %>%
       filter(!is.na(!!sym(input$column_select))) %>%
@@ -99,54 +105,31 @@ server <- function(input, output) {
     max_vals()
   })
   
-  # Reactive function to run linear model and output summary
-  lm_output <- eventReactive(input$run_model, {
-    # Filter data to only include selected variables
-    df <- data %>% select(input$var_select, Retweets)
-    
-    # Run linear model and output summary
-    model <- lm(Retweets ~ ., data = df)
-    model_summary <- summary(model)
-    
-    # Generate plot of model output using emmeans::plot_model
-    plot_model(model, type = "pred")
-    
-    # Return the model summary and plot
-    list(summary = model_summary, plot = plot_model(model, type = "pred"))
+  # Define the reactive model based on the input variables selected
+  model <- reactive({
+    if(length(input$var_select) > 0) {
+      df <- data %>% 
+        select(input$var_select, Retweets)
+      # fit the linear model
+      lm(Retweets ~ ., data = df)
+    }
   })
   
-  # Render linear model output as text and plot
-  output$lm_output <- renderUI({
-    model_output <- lm_output()
-    
-    tagList(
-      h3("Model Summary"),
-      verbatimTextOutput("summary_output"),
-      h3("Model Plot"),
-      plotOutput("plot_output")
-    )
-  })
-  
-  # Render model summary as text
-  output$summary_output <- renderPrint({
-    lm_output()$summary
-  })
-  
-  # Render model plot
+  # Render the plot based on the model
   output$plot_output <- renderPlot({
-    lm_output()$plot
+    if(!is.null(model())) {
+      plot_model(model(), type = "pred")
+    }
   })
   
-  # PAGE 5
-  
-  timeline <- eventReactive(input$run_timeline, {
-    
-    
-    fig <- plot_ly(x = df$week_date,
-                   type = "histogram")
+  # Render the summary based on the model
+  output$summary_output <- renderPrint({
+    if(!is.null(model())) {
+      summary(model())
+    }
   })
   
-  # Render timeline output
+  # PAGE 5 Render timeline output
   df <- data %>% 
     select(Date) %>% 
     mutate(

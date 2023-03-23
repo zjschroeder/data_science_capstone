@@ -1,0 +1,32 @@
+---
+title: "Overview"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Background
+
+"Cancel Culture" is a hot-button issue across op-eds, think pieces, and online discourse. Yet it lacks a clear, empirically defined definition, and any current definitions lack agreement across the political spectrum (Saint-Louis, 2021). Originating in the predominantly Black subculture of "Black Twitter", *cancelling* began as a social movement wherein low-status individuals coordinated efforts to de-platform someone whose ”*values, (in)action, or speech are so offensive, one no longer wishes to grace them with their presence, time, and money*” (Clark, 2020). In this effort, they attempted to manipulate the attention economy by boycotting a brand, but the brand was in this case a person('s online profile). Given the exponential increase in search results for the term, cancel culture has grown beyond its original usage into a new, more complex phenomena, garnering considerable media attention. Over the last several election cycles in the United States, past presidents (BBC, 2020), pundits, and politicians have used Cancel Culture to rally their base by describing it as a ”war against conservatives” (Fox News, 2020; Hagi, 2019).
+
+# Why do we care? 
+
+Social groups punishing moral & social violations is not new (Rai & Fisk, 2011). McCarthy era "witch hunts" enacted more widespread harm and did so with governmental approval. What is new, however, is the ability to share moral judgments to a huge audience while in line at a coffee shop. This fundamentally shifts several key aspects into unprecedented territory in the following ways: 
+(1) moral judgments are not bound by authority. Although punishments such as criminal charges or loss of employment opportunities remain outside the purview of most Twitter users, any of the millions of Twitter users can share their opinion. 
+(2) Social and geographical context do not limit who participates in passing moral judgment. A teacher in Idaho has the same opportunity to share her opinion as the next-door-neighbor of a cancellation Target in Toronto. 
+(3) There is a small cost associated with participating in cancellations. Perceivers have a low likelihood of retribution, no monetary investment, and a small time commitment (Henderson, 2019).
+
+As such, I am seeking to investigate what constitutes "cancel culture" via a large-scale text analysis of Tweets discussing cancel culture and participating in cancellations. Prior work has been largely qualitative in nature and constitutes the basis of the current study (e.g., Bouvier & Machin, 2021; Clark, 2020; Saint-Louis, 2021). While some quantitative work has been accomplished (most recently by Pew Research in 2021), researchers have a unique opportunity to access the entire modern history of cancel culture as it is recorded on Twitter. 
+
+# Overview of the Current Project
+
+This app is composed of three subsections:
+
+## Linguistic Features
+
+## Predictors of Engagement
+
+## Timelines

@@ -1,0 +1,200 @@
+---
+title: "Manuscript"
+author: "Zachary J. Schroeder"
+date: ""
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+"Cancel Culture" is a hot-button keyword in op-eds, think pieces, and online discourse. Yet, it lacks a clear, empirically defined definition, and it's certain that any current definitions lack agreement across the political spectrum (Saint-Louis, 2021). Originating in the predominantly Black subculture of "Black Twitter", *cancelling* began as a social movement wherein low-status individuals coordinated efforts to de-platform someone whose ”*values, (in)action, or speech are so offensive, one no longer wishes to grace them with their presence, time, and money*” (Clark, 2020). In this effort, they attempted to manipulate the attention economy by boycotting a brand, but the brand was in this case a person('s online profile). However, given the exponential increase in search results for the term, cancel culture has grown beyond its original usage by Black folks on Twitter into a new phenomena, garnering considerable media attention. Over the last several election cycles in the United States, past presidents (BBC, 2020), pundits, and politicians have used Cancel Culture to rally their base by describing it as a ”war against conservatives” (Fox News, 2020; Hagi, 2019).
+
+Why do we care? Social groups punishing moral & social violations is not new (Rai & Fisk, 2011). McCarthy era "witch hunts" enacted more widespread harm and did so with governmental approval. What is new, however, is the ability to share moral judgments to a huge audience while in line at a coffee shop. This fundamentally shifts several key aspects into unprecedented territory in the following ways: (1) moral judgments are not bound by authority. Although punishments such as criminal charges or loss of employment opportunities remain outside the purview of most Twitter users, any of the millions of Twitter users can share their opinion. (2) Social and geographical context  do not limit who participates in passing moral judgment. A teacher in Idaho has the same opportunity to share her opinion as the next-door-neighbor of a cancellation Target. (3) There is a small cost associated with participating in cancellations. Perceivers have a low likelihood of retribution, no monetary investment, and a small time commitment (Henderson, 2019). 
+
+The political polarization of the term cancelling is particularly interesting, as by Clark's (2020) definition, the following would also be considered participation in cancel culture: conservative students boycotting speakers from their campuses, Florida's "Don't Say Gay" bill, removing Liz Cheney from her appointments in the US House of Representatives for disagreeing with Donald Trump's repeated false claims that the election was stolen from him. Conservative politicians have also "sought to preemptively cancel people through recent legislature controlling participated in cancel culture as the speech of college faculty and K-12 teachers by banning curriculum on evolution, LGBTQ history, Critical Race Theory, and The 1619 Project, or, further back, McCarthy/Hoover policies targeting entertainers, academics, left-wing politicians, and labor union activists that resulted in 10-12,000 people to lose jobs and even resulted in Texs Governor Allan Shivers to propose the death penalty for any members of the Communist Party. Indeed, in a recent study by Cook and colleagues (2021), when cancel culture was framed without the current politicized terminology, conservatives were *more* likely to approve of "cancelling" someone. This relationship was predicted across the political spectrum by adherence to an honor culture.
+
+However, even in the politically-charged previous paragraph, we only discussed speech as a reason for cancelling someone. There are many other moral transgressions that have resulted in "cancellations" such as criminal behavior (specifically sexual assault in light of the recent #MeToo movement)
+
+As such, I am seeking to investigate what constitutes "cancel culture" via a large-scale text analysis of Tweets discussing cancel culture as well as participating in cancellations. Prior work has been largely qualitative in nature and constitutes the basis of the current study (e.g., Bouvier & Machin, 2021; Clark, 2020; Saint-Louis, 2021). And while some quantitative work has been accomplished (most recently by Pew Research in 2021), researchers have a unique opportunity to access the entire modern history of CC as it is recorded on Twitter. 
+
+> It is outside the scope to predict who ignities the flame of cancellation - that is beyond the computing power of the author's laptop. However, once the spark is lit, let us see how things unfold
+
+## Discuss DVs:
+
+* Analytic thinking
+* cognitive processing
+* dehumanization language
+* threat
+* honor
+* positive valence
+* negative valence
+
+This manuscript is composed of three studies. 
+
+# Overview
+
+## Study 1: Cancel Culture Mentions: Utilizing Bottom-Up and Top-Down Methods to Identify Components of Cancel-Culture Discourse
+
+### Research Question 1: How do Twitter users discuss Cancel Culture?
+
+> Learning goal: Meaning extraction method and LIWC text analysis.
+
+Using data from Twitter, we will perform the Meaning Extraction Method to identify components and patterns in text-language discussing Cancel Culture.
+
+### Research Question 2: How has discourse about Cancel Culture changed over time?
+
+Using LIWC/Quanteda, we will analyze Tweets mentioning Cancel Culture to identify whether/how the following aspects of language use have changed since 2007:
+
+1. Base Rates (*n* tweets per month)  
+2. Negative Affect  
+3. Positive Affect  
+4. Honor language  
+5. Threat language  
+6. Dehumanization language  
+7. Language referring to political partisanship  
+
+### Research Question 3: Who is discussing cancel culture?
+
+To answer this question, we will pull the tweet history and following/followers list of people mentioning cancel culture in their Tweets. We will run the following analyses:  
+
+1. What is the likelihood of Tweeting about CC more than once?  
+
+2. For repeated users, how long is the average amount of time they take between mentions? For example, is it for a single instance of CC or do they pop up every once-in-a-while?  
+
+3. Create a political-affiliation value for each Tweet. 
+    * For each Tweet, collect the people who liked it. Utilize the GET /2/tweets/:id/liking_users endpoint to collect 100 users for each tweet. 
+    * From this list of 101 (poster + likers), I will utilize two operationalizations of political affiliation. 
+    * First, I will pull all URLs linked in Tweets and create a measure of political bias from them (e.g., do they post a lot of MSNBC or Fox News?). 
+    * Second, I will scrape the following list for each account as a measure of political affiliation. Political figures and institutions will be given scores (RNC = -1; DNC = +1). 
+    * I will then compare the two to see how much they overlap.  
+    
+5. I will then split the Tweets into either three or five groups, depending on the spread of the numeric political descriptors. If it appears that the data are bimodal, I will utilize a three-item split. If the data are more continuous, I will use a quantile. I will then re-apply the Meaning Extraction Method to the tweets to determine if new factor structures emerge when it's conservatives or democrats.  
+
+6. From the above, I will also analyze the politically-coded data to see whether text content differs by the continuous, numeric measure political affiliation in the following ways: 
+    * Analytic thinking
+    * cognitive processing
+    * dehumanization language
+    * threat
+    * honor
+    * positive valence
+    * negative valence
+    These analyses will be run in a hierarchical regression predicting the continuous measure of political affiliation to examine whether variance is better explained by one or another text search result.
+    
+### Research Question 4: Extract further possible target list from MEM output
+
+From the n-grams list used in the meaning extraction PCA in research question 1, I will utilize a search algorithm to expand our search for Targets.
+
+## Study 2: Targets of Cancel Culture: Modelling within target variability in CC experiences.
+
+> Learning Goal: (Non)linear growth curve modelling
+
+### Research Question 1: Is there quantitative evidence for *affective flow*? Testing conclusions from Bouvier & Machin (2021).
+
+1. Nest Tweets within Target. Over time (+ possible interaction with replies) search for changes in: 
+    * analytic thinking
+    * Cognitive processes
+    * Positive/negative valence. 
+    * Dehumanization language
+    Affective flow posits that the coherence of discussion dissipates over time, with analytic thinking and cognitive processes being replaced by replies that match affect but do not match content. This is a possible hypothesis for why laypeople have the perception of cancellations "spinning out of control"
+    
+### Research Question 2: Does making a public apology impact Tweet content?
+
+1. Expand above models utilizing nonlinear growth curve modelling (Won Suk, West, Fine, and Grimm, 2019). This will allow me to examine whether adding a spline at the apology changes the content of tweets
+
+2. Generate categories of apology success - either significant increase in positive tone, decrease in negative tone, or change in thinking styles (analytic, cognitive, dehumanization). Run MEM on the text of these apologies to extract and compare different factor structure. Pull Markowitz's 2020 paper on MEM as a guide for comparing the content.
+
+### Research Question 3: Does being punished impact Tweet content?
+
+> Multilevel Modelling (Tweets nested within Target)
+
+1. Repeat the methodology for public apology, but replace apology spline with punishment spline. Iterate over types of punishment (firing, criminal charges, etc.)
+
+2. For significant splines, generate categories and re-apply MEM on subset of Tweets to identify post-spline differences in perception.
+
+## Study 3: Individual Differences in Target Identity Influence CC Experience
+
+### Research Question 1: Does content of Tweets participating in cancelling differ by the following identities:
+
+IVs
+
+1. Race
+2. Gender  
+3. Celebrity-status (number of followers when cancelled)
+4. Transgression
+5. Political Affiliation
+
+DVs: 
+
+1. Length of relevance
+2. Total N Tweets
+3. Dehumanization language
+4. Positive/Negative affect
+5. Slurs(?)
+6. Cognitive processes, analytic thinking
+
+### Research Question 2: If the splines are significant (apology or punishment), determine whether the above identity markers moderate spline significance/slop
+
+
+## Study 4: Perceivers in Cancellations: Examining who participates in a cancellation.
+
+> Learning Goal: Network Analysis
+
+### Research Question 1: Does cancellation occur within or between groups?
+
+1. Compare following overlap between targets and perceivers for similarity. Use a random selection of all followers in dataset for odds comparison (e.g., just to chance).
+
+2. Compare tweet history between Targets and Perceivers for similarity.
+
+3. Examine whether Tweet content (DVs) is moderated by similarity
+
+### Research Question 2: How does a Cancellation spread?
+
+1. Utilize network analysis to map the spread of all cancellation Tweets.
+
+2. Examine role of verified status/high follower count individuals in nodes
+
+3. Examine overlap across cancellations - are there users who are focal points across multiple cancellations?
+
+### Research QUestion 3: What makes an impactful cancellation Tweet?
+
+1. Examine the content of Tweets that get the most likes and re-tweets 
+
+2. Examine content of Tweets that have homogenous text in replies - either matching or mismatching. Variability in replies (especially between positive and negative affect likely suggests conflict in the tweets)
+
+# Methods
+
+## Cancel Culture Mentions Meaning Extraction Method and Tweet Extraction
+
+I pulled every Tweet that had mentioned "cancel" and "culture" since 2007. This left us with just under four million tweets. I then used the Meaning Extraction Helper to create a matrix of token inclusions in the tweets.
+
+Decisions:
+- Cutoff for inclusion: N-grams must occur in 0.03% of texts
+- TO ignore people tweeting #cancelculture, we only analyzed tweets with word count > 1
+
+We first used the MEH to create a frequency list of all words that were used in more than 0.3% of Tweets. This was used to generate additions to the Conversion and Stop lists
+
+A walk through of my settings and rationale for the MEH can be found [here](https://www.loom.com/share/136ed08d9ada465abecdc12e33685532)
+
+## Datasets:
+
+## Data that still needs to be collected:
+
+- For each CC tweet: all likes (100 cap) and the following/follower count for all users
+- Apology text for all targets
+- Apology date for all targets
+- Punishments/consequences
+- Date of punishment/consequence
+- All tweets that reply to exemplar Tweets
+- Number of followers each target had at the time of their cancellation
+
+# Results
+
+# Discussion
