@@ -23,10 +23,18 @@ As such, I am seeking to investigate what constitutes "cancel culture" via a lar
 
 # Overview of the Current Project
 
-This app is composed of three subsections:
+In all, we scraped more than 7.8 million tweets before the API was shut down. Due to the limitations of computational power, this app uses a random subset of 1.3 million of these tweets (the size that could be housed on Github for free). In future updates (and upon securing funding) this app will be updated to include the full dataset.
+
+There are three tools I have created for you to explore these data:
+
+## Timelines
+
+First, explore the timeline of cancel culture as it originated in the early 2010s and rapidly spread in the last four years. This data counts and displays every unique tweet that said the words "cancel culture" from the dawn of Twitter through 2022.
 
 ## Linguistic Features
 
+We used LIWC-22 to code a set of 31 theoretically related linguistic features of the 1.3 million tweet dataset. To help you get an idea of what Tweets high in each of these features may sound like, select a feature and we will show you a selection of tweets in the top 1% of that feature (e.g., politeness, authenticity)
+
 ## Predictors of Engagement
 
-## Timelines
+Once you've gotten a good idea of what these different linguistic features look like, you can examine how they either uniquely or combine to predict how many retuweets a tweet will get. Do polite Tweets get retweeted more than impolite tweets?

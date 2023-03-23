@@ -43,6 +43,8 @@ ui <- dashboardPage(
               fluidPage(htmlOutput("data_collection"))
       ),
       tabItem(tabName = "tab3",
+              fluidRow(box(width = 12, 
+                           textOutput("table_description"))),
               fluidRow(
                 box(width = 12,
                     selectInput("column_select", 
@@ -59,14 +61,16 @@ ui <- dashboardPage(
       ),
       tabItem(tabName = "tab4",
               fluidRow(
-                box(width = 12,
+                box(width = 5,
+                    textOutput("model_description")),
+                box(width = 5,
                     conditionalPanel(
                       condition = "length($('select[multiple]').val()) > 0",
                       selectInput("var_select", "Select predictors", 
                                   choices = select_options,
-                                  multiple = TRUE)
+                                  multiple = TRUE))
                     )
-                )),
+                ),
                 fluidRow(box(width = 12,
                     plotOutput("plot_output"))
               ),
@@ -96,6 +100,10 @@ server <- function(input, output) {
   output$overview <- renderUI({includeHTML(here::here("overview.html"))
   })
   
+  output$table_description <- renderText({
+    "Using LIWC-22, we coded for 31 linguistic features. These include the amount of analytic thinking, uses of different pronouns, and how polite the language is. Using the drop-down menu below, select features you find interesting and you'll be shown tweets that scored in the top 1% of that feature"
+  })
+  
   max_vals <- reactive({
     data %>%
       filter(!is.na(!!sym(input$column_select))) %>%
@@ -113,13 +121,13 @@ server <- function(input, output) {
   # Define the reactive model based on the input variables selected
   model <- reactive({
     if(length(input$var_select) > 0) {
-      df <- data %>% 
+      df <- data  %>% 
         select(Retweets, input$var_select)
       # fit the linear model
       lm(Retweets ~ ., data = df)
     }
   })
-  
+
   # Render the plot based on the model
   output$plot_output <- renderPlot({
     if(!is.null(model())) {
@@ -134,6 +142,9 @@ server <- function(input, output) {
     }
   })
   
+ output$model_description <- output$timeline_discussion <- renderText({
+   "Now that you've gotten a good idea of what features we coded for, feel free to explore how they each predict the number of retweets a tweet about cancel culture gets"
+ })
   # PAGE 5 Render timeline output
   dates <- dates %>% 
     mutate(
